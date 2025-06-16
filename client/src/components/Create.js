@@ -294,7 +294,7 @@ const Create = () => {
                 ) : (
                   <>
                     <img
-                      src={`/get/${image.img}`}
+                      src={`https://travel-blog-frontend-28g5.onrender.com/images/${image.img}`}
                       alt="img"
                       className="max-h-64"
                     />

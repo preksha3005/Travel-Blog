@@ -38,7 +38,7 @@ const AllBlogs = () => {
               >
               
                 <img
-                  src={`/getblog/${blog.img}`}
+                  src={`https://travel-blog-frontend-28g5.onrender.com/images/${blog.img}`}
                   alt="img"
                   className="w-full h-full object-cover max-h-60"
                 />
