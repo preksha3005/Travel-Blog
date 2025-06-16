@@ -33,12 +33,12 @@ const app=express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'https://travel-blog-frontend-28g5.onrender.com',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(cookieParser()); // middleware function in Express.js that enables the parsing of cookies in incoming requests.
 // mongoose.connect("mongodb://localhost:27017/travel").then(() => {
