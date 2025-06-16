@@ -33,7 +33,6 @@ const app=express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, "public"))); 
 
 app.use(cors({
   origin: 'https://travel-blog-frontend-28g5.onrender.com',
@@ -172,7 +171,7 @@ app.get("/initial", verifyuser, (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/images");
+    cb(null, "public/images");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -208,7 +207,7 @@ app.get("/get", verifyuser, (req, res) => {
     .catch((err) => res.json({ message: "ERROR" }));
 });
 
-app.get("/get/:filename", verifyuser, (req, res) => {
+app.get("/get/:filename", (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, `public/images/${filename}`);
    console.log(`[Image Serve Debug] Attempting to serve file from: ${filePath}`); // <<< ADD THIS LOG
@@ -239,6 +238,8 @@ app.get("/getblog/:filename", (req, res) => {
   });
   // res.sendFile(filePath);
 });
+
+app.use(express.static(path.join(__dirname, "public"))); 
 
 app.put("/update/:id", verifyuser, async (req, res) => {
   const { id } = req.params;
