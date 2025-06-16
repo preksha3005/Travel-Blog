@@ -33,6 +33,8 @@ const app=express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.static(path.join(__dirname, "public"))); 
+
 app.use(cors({
   origin: 'https://travel-blog-frontend-28g5.onrender.com',
   credentials: true,
@@ -209,7 +211,14 @@ app.get("/get", verifyuser, (req, res) => {
 app.get("/get/:filename", verifyuser, (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, `public/images/${filename}`);
-  res.sendFile(filePath);
+   console.log(`[Image Serve Debug] Attempting to serve file from: ${filePath}`); // <<< ADD THIS LOG
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error(`[Image Serve Error] Error sending file ${filename}:`, err.message);
+      res.status(404).send("File not found or server access issue.");
+    }
+  });
+  // res.sendFile(filePath);
 });
 
 app.get("/getblog", (req, res) => {
@@ -221,10 +230,10 @@ app.get("/getblog", (req, res) => {
 app.get("/getblog/:filename", (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, `public/images/${filename}`);
-  console.log(`Attempting to serve file from: ${filePath}`); // THIS IS CRUCIAL FOR RENDER LOGS
+  console.log(`[Image Serve Debug] Attempting to serve file from: ${filePath}`); // <<< ADD THIS LOG
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error(`Error sending file ${filename}:`, err.message); // Log the specific error
+      console.error(`[Image Serve Error] Error sending file ${filename}:`, err.message);
       res.status(404).send("File not found or server access issue.");
     }
   });
@@ -278,6 +287,7 @@ app.delete("/del/:id", verifyuser, async (req, res) => {
 //     res.sendFile(path.resolve(__dirname, "../client/build", "index.html"))
 //   );
 // }
+
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running");
