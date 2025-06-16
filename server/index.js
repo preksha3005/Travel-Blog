@@ -221,7 +221,14 @@ app.get("/getblog", (req, res) => {
 app.get("/getblog/:filename", (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, `public/images/${filename}`);
-  res.sendFile(filePath);
+  console.log(`Attempting to serve file from: ${filePath}`); // THIS IS CRUCIAL FOR RENDER LOGS
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error(`Error sending file ${filename}:`, err.message); // Log the specific error
+      res.status(404).send("File not found or server access issue.");
+    }
+  });
+  // res.sendFile(filePath);
 });
 
 app.put("/update/:id", verifyuser, async (req, res) => {
