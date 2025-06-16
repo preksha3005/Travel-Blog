@@ -4,8 +4,10 @@ import axios from "axios";
 import img2 from "../assets/img2.jpg";
 import Navbar_Sign from "./Navbar_Sign";
 
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
+
 const SignUp = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [name, setn] = React.useState("");
   const [email, sete] = React.useState("");
   const [password, setp] = React.useState("");

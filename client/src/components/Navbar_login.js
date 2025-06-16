@@ -1,8 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
+
 const Navbar_login = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [initial, seti] = React.useState("");
   const navigate = useNavigate();
   React.useEffect(() => {

@@ -4,8 +4,10 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar_Sign from "./Navbar_Sign";
 import img2 from "../assets/img2.jpg";
 
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
+
 const Login = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [email, sete] = React.useState("");
   const [password, setp] = React.useState("");
 
@@ -28,7 +30,7 @@ const Login = () => {
     sete(" ");
     setp(" ");
   };
-  axios.defaults.withCredentials = true;
+
   return (
     <div className="relative h-80">
       <Navbar_Sign />

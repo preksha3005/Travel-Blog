@@ -3,9 +3,10 @@ import Navbar_all from "./Navbar_all";
 import img2 from "../assets/img2.jpg";
 import img1 from "../assets/img1.jpg";
 import axios from "axios";
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
 
 const AllBlogs = () => {
-  axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [blogs, setb] = React.useState([]);
   React.useEffect(() => {
     axios
@@ -15,7 +16,6 @@ const AllBlogs = () => {
       })
       .catch((err) => alert("Error"));
   }, [blogs]);
-  axios.defaults.withCredentials=true;
   return (
     <div className="min-h-screen bg-gray-50 pb-10 h-screen w-full">
       <Navbar_all />

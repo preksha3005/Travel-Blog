@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import img2 from "../assets/img2.jpg";
 import Navbar_Sign from "./Navbar_Sign";
+
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
+
 const ForgotPass = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [email, sete] = React.useState("");
   const navigate = useNavigate();
   const handle = (e) => {
@@ -21,7 +24,7 @@ const ForgotPass = () => {
       .catch((err) => console.log(err));
     sete(" ");
   };
-  axios.defaults.withCredentials = true;
+
   return (
     <div className="container">
       <Navbar_Sign />

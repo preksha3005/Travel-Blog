@@ -3,8 +3,10 @@ import Navbar_login from "./Navbar_login";
 import axios from "axios";
 import { MdDelete, MdEdit } from "react-icons/md";
 
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+axios.defaults.withCredentials = true;
 const Create = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+
   const [file, setf] = React.useState();
   const [img, seti] = React.useState([]);
   const [name, sett] = React.useState("");
