@@ -1,7 +1,7 @@
 import React from "react";
 
 const Navbar_Sign = () => {
-   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+  //  axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   return (
     <nav className="w-full fixed flex justify-between text-xl font-bold bg-white/30 backdrop-blur-sm p-2 h-12 xs:text-base xs:h-10 xs:w-full md:text-3xl lg:text-xl">
       <ul>
