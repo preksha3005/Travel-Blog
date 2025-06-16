@@ -5,6 +5,7 @@ import Navbar_Sign from "./Navbar_Sign";
 import img2 from "../assets/img2.jpg";
 
 const Login = () => {
+   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [email, sete] = React.useState("");
   const [password, setp] = React.useState("");
 
@@ -12,7 +13,7 @@ const Login = () => {
   const handle = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/loginapp", { email, password })
+      .post("/loginapp", { email, password })
       .then((result) => {
         if (result.data.message) {
           console.log(result.data.message);

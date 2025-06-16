@@ -5,10 +5,11 @@ import img1 from "../assets/img1.jpg";
 import axios from "axios";
 
 const AllBlogs = () => {
+  axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [blogs, setb] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get("http://localhost:3001/getblog")
+      .get("/getblog")
       .then((res) => {
         setb(res.data);
       })
@@ -37,7 +38,7 @@ const AllBlogs = () => {
               >
               
                 <img
-                  src={`http://localhost:3001/getblog/${blog.img}`}
+                  src={`/getblog/${blog.img}`}
                   alt="img"
                   className="w-full h-full object-cover max-h-60"
                 />

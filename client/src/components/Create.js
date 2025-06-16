@@ -4,6 +4,7 @@ import axios from "axios";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 const Create = () => {
+   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [file, setf] = React.useState();
   const [img, seti] = React.useState([]);
   const [name, sett] = React.useState("");
@@ -23,7 +24,7 @@ const Create = () => {
 
   const fetchUserBlogs = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/get");
+      const res = await axios.get("/get");
       seti(res.data);
     } catch (err) {
       console.error("Error fetching user blogs:", err);
@@ -48,7 +49,7 @@ const Create = () => {
     formdata.append("mail", mail);
     console.log(file);
     axios
-      .post("http://localhost:3001/upload", formdata)
+      .post("/upload", formdata)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
     setf(null);
@@ -61,7 +62,7 @@ const Create = () => {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:3001/get")
+      .get("/get")
       .then((res) => seti(res.data))
       .catch((err) => alert("Error"));
   }, [img]);
@@ -78,7 +79,7 @@ const Create = () => {
     try {
       console.log(editId);
       const response = await axios.put(
-        `http://localhost:3001/update/${editId}`,
+        `/update/${editId}`,
         {
           name: editTitle,
           content: editContent,
@@ -108,7 +109,7 @@ const Create = () => {
 
   const handelete = (id) => {
     axios
-      .delete("http://localhost:3001/del/" + id)
+      .delete("/del/" + id)
       .then((res) => seti(res.data))
       .catch((err) => console.log(err));
   };
@@ -291,7 +292,7 @@ const Create = () => {
                 ) : (
                   <>
                     <img
-                      src={`http://localhost:3001/get/${image.img}`}
+                      src={`/get/${image.img}`}
                       alt="img"
                       className="max-h-64"
                     />

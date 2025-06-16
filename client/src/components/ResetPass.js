@@ -5,13 +5,14 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import img2 from "../assets/img2.jpg";
 import Navbar_Sign from "./Navbar_Sign";
 const ResetPass = () => {
+   axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
   const [password, setp] = React.useState("");
   const { token } = useParams();
   const navigate = useNavigate();
   const handle = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/resetpass/"+token, { password })
+      .post("/resetpass/"+token, { password })
       .then((result) => {
         if (result.data.status) navigate("/login");
       })
