@@ -1,22 +1,6 @@
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const cors = require("cors");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-// const app = express();
-// const dotenv = require("dotenv");
-// dotenv.config();
-// const cookieParser = require("cookie-parser");
-// const path = require("path");
-// const nodemailer = require("nodemailer");
-// const multer = require("multer");
-// const User = require("./models/User");
-// const Model = require("./models/Model");
-
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import bcrypt from "bcrypt";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -25,21 +9,25 @@ import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
+import { storage } from "./cloudinary.js";
 import User from "./models/User.js";
 import Model from "./models/Model.js";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 dotenv.config();
-const app=express()
+const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-app.use(cors({
-  origin: 'https://travel-blog-frontend-28g5.onrender.com',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: "https://travel-blog-frontend-28g5.onrender.com",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(cookieParser()); // middleware function in Express.js that enables the parsing of cookies in incoming requests.
 // mongoose.connect("mongodb://localhost:27017/travel").then(() => {
@@ -169,36 +157,42 @@ app.get("/initial", verifyuser, (req, res) => {
   }
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "travel-blog", // folder in Cloudinary
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
+
 const upload = multer({ storage });
 
-app.post("/upload", verifyuser, upload.single("file"), (req, res) => {
+app.post("/upload", verifyuser, upload.single("file"), async (req, res) => {
   const userId = req.user.id;
   try {
-    console.log(req.file.filename);
-    console.log(req.body.name);
-    console.log(req.body.content);
-    console.log(req.body.mail);
-    Model.create({
-      img: req.file.filename,
+    // Cloudinary returns URL in req.file.path
+    const imgUrl = req.file.path;
+
+    await Model.create({
+      img: imgUrl, // store the cloudinary URL
       name: req.body.name,
       content: req.body.content,
       mail: req.body.mail,
       user: userId,
     });
-    return res.json({ status: true, message: "Stored" });
-  } catch {
+
+    return res.json({ status: true, message: "Stored", imgUrl });
+  } catch (err) {
+    console.error(err);
     return res.json({ message: "Error" });
   }
 });
-
 app.get("/get", verifyuser, (req, res) => {
   const userId = req.user.id;
   Model.find({ user: userId })
@@ -207,23 +201,14 @@ app.get("/get", verifyuser, (req, res) => {
     .catch((err) => res.json({ message: "ERROR" }));
 });
 
-app.get("/get/:filename", (req, res) => {
-  const { filename } = req.params;
-  const filePath = path.join(__dirname, `public/images/${filename}`);
-   console.log(`[Image Serve Debug] Attempting to serve file from: ${filePath}`); // <<< ADD THIS LOG
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error(`[Image Serve Error] Error sending file ${filename}:`, err.message);
-      res.status(404).send("File not found or server access issue.");
-    }
-  });
-  // res.sendFile(filePath);
-});
 
-app.get("/getblog", (req, res) => {
-  Model.find()
-    .then((blogs) => res.json(blogs))
-    .catch((err) => res.json({ message: "ERROR" }));
+app.get("/getblog", async (req, res) => {
+  try {
+    const blogs = await Model.find();
+    res.json(blogs); // each blog.img now contains the cloudinary URL
+  } catch (err) {
+    res.json({ message: "ERROR" });
+  }
 });
 
 app.get("/getblog/:filename", (req, res) => {
@@ -232,14 +217,17 @@ app.get("/getblog/:filename", (req, res) => {
   console.log(`[Image Serve Debug] Attempting to serve file from: ${filePath}`); // <<< ADD THIS LOG
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error(`[Image Serve Error] Error sending file ${filename}:`, err.message);
+      console.error(
+        `[Image Serve Error] Error sending file ${filename}:`,
+        err.message
+      );
       res.status(404).send("File not found or server access issue.");
     }
   });
   // res.sendFile(filePath);
 });
 
-app.use(express.static(path.join(__dirname, "public"))); 
+app.use(express.static(path.join(__dirname, "public")));
 
 app.put("/update/:id", verifyuser, async (req, res) => {
   const { id } = req.params;
@@ -252,11 +240,9 @@ app.put("/update/:id", verifyuser, async (req, res) => {
       { new: true }
     );
     if (!updatedCard) {
-      return res
-        .status(404)
-        .json({
-          message: "Card not found or you don't have permission to edit it.",
-        });
+      return res.status(404).json({
+        message: "Card not found or you don't have permission to edit it.",
+      });
     }
 
     return res.json({
@@ -288,7 +274,6 @@ app.delete("/del/:id", verifyuser, async (req, res) => {
 //     res.sendFile(path.resolve(__dirname, "../client/build", "index.html"))
 //   );
 // }
-
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running");

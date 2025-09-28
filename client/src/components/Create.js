@@ -6,7 +6,6 @@ import { MdDelete, MdEdit } from "react-icons/md";
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 const Create = () => {
-
   const [file, setf] = React.useState();
   const [img, seti] = React.useState([]);
   const [name, sett] = React.useState("");
@@ -21,19 +20,14 @@ const Create = () => {
   const [editMail, setEditMail] = React.useState("");
 
   React.useEffect(() => {
-    axios.defaults.withCredentials = true;
-  }, []);
-
-  const fetchUserBlogs = async () => {
-    try {
-      const res = await axios.get("/get");
-      seti(res.data);
-    } catch (err) {
-      console.error("Error fetching user blogs:", err);
-    }
-  };
-
-  React.useEffect(() => {
+    const fetchUserBlogs = async () => {
+      try {
+        const res = await axios.get("/get");
+        seti(res.data);
+      } catch (err) {
+        console.error("Error fetching user blogs:", err);
+      }
+    };
     fetchUserBlogs();
   }, []);
 
@@ -52,7 +46,10 @@ const Create = () => {
     console.log(file);
     axios
       .post("/upload", formdata)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res.data.imgUrl); // <-- Cloudinary URL
+        fetchUserBlogs(); // refresh blog list
+      })
       .catch((err) => console.log(err));
     setf(null);
     sett("");
@@ -80,14 +77,11 @@ const Create = () => {
     e.preventDefault();
     try {
       console.log(editId);
-      const response = await axios.put(
-        `/update/${editId}`,
-        {
-          name: editTitle,
-          content: editContent,
-          mail: editMail,
-        }
-      );
+      const response = await axios.put(`/update/${editId}`, {
+        name: editTitle,
+        content: editContent,
+        mail: editMail,
+      });
       console.log(response.data.updatedCard);
       const updatedCard = response.data.updatedCard;
       seti((prev) =>
@@ -293,11 +287,7 @@ const Create = () => {
                   </form>
                 ) : (
                   <>
-                    <img
-                      src={`https://travel-blog-frontend-28g5.onrender.com/images/${image.img}`}
-                      alt="img"
-                      className="max-h-64"
-                    />
+                    <img src={image.img} alt="img" className="max-h-64" />
                     <div className="font-bold text-xl">
                       <h2>{image.name}</h2>
                       <br />

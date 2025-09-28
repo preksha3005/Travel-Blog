@@ -36,36 +36,37 @@ const AllBlogs = () => {
                 className="flex flex-col border-2 border-gray-500 p-4 rounded-lg shadow-lg text-center transition-transform duration-300 hover:scale-105  m-8 overflow-auto cursor-pointer max-h-[70vh] md:max-h-[45vh] lg:max-h-[80vh] l g:w-[28vw]"
                 //bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer
               >
-              
-                <img
-                  src={`https://travel-blog-frontend-28g5.onrender.com/images/${blog.img}`}
-                  alt="img"
-                  className="w-full h-full object-cover max-h-60"
-                />
+                {blog.img && (
+                  <img
+                    src={blog.img}
+                    alt="img"
+                    className="w-full h-full object-cover max-h-60"
+                  />
+                )}
                 <div className="font-bold text-xl">
-                {/* Blog Name (Location) */}
-              <div className="p-4 bg-gray-100 text-center">
-                <h3 className="font-bold text-xl text-gray-800">
-                  {blog.name}
-                </h3>
-              </div>
+                  {/* Blog Name (Location) */}
+                  <div className="p-4 bg-gray-100 text-center">
+                    <h3 className="font-bold text-xl text-gray-800">
+                      {blog.name}
+                    </h3>
+                  </div>
                   <br />
-                   <div className=" flex flex-col flex-grow">
-                <p className="text-gray-700 text-base mb-4 flex-grow overflow-hidden ">
-                  {/* line-clamp-4 truncates text to 4 lines with ellipsis if overflow */}
-                  {blog.content}
-                </p>
-                <p className="text-sm text-blue-600 hover:underline mt-auto">
-                  {blog.mail}
-                </p>
-                </div>
+                  <div className=" flex flex-col flex-grow">
+                    <p className="text-gray-700 text-base mb-4 flex-grow overflow-hidden ">
+                      {/* line-clamp-4 truncates text to 4 lines with ellipsis if overflow */}
+                      {blog.content}
+                    </p>
+                    <p className="text-sm text-blue-600 hover:underline mt-auto">
+                      {blog.mail}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))
           ) : (
-             <p className="col-span-full text-center text-xl text-gray-600 py-20">
-            No blogs available yet. Be the first to share!
-          </p>
+            <p className="col-span-full text-center text-xl text-gray-600 py-20">
+              No blogs available yet. Be the first to share!
+            </p>
           )}
         </div>
       </div>
