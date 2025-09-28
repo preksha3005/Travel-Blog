@@ -2,7 +2,7 @@ import React from "react";
 import img2 from "../assets/img2.jpg";
 import img1 from "../assets/img1.jpg";
 import axios from "axios";
-import Navbar_Sign from "./Navbar_Sign";
+import Navbar_login from "./Navbar_login";
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
@@ -18,7 +18,7 @@ const AllBlogs = () => {
   }, [blogs]);
   return (
     <div className="min-h-screen bg-gray-50 pb-10 h-screen w-full">
-      <Navbar_Sign/>
+      <Navbar_login/>
       <div>
         {/*<img
           src={img2}
