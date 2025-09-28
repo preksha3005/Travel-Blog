@@ -19,15 +19,16 @@ const Create = () => {
   const [editContent, setEditContent] = React.useState("");
   const [editMail, setEditMail] = React.useState("");
 
+  const fetchUserBlogs = async () => {
+    try {
+      const res = await axios.get("/get");
+      seti(res.data);
+    } catch (err) {
+      console.error("Error fetching user blogs:", err);
+    }
+  };
+
   React.useEffect(() => {
-    const fetchUserBlogs = async () => {
-      try {
-        const res = await axios.get("/get");
-        seti(res.data);
-      } catch (err) {
-        console.error("Error fetching user blogs:", err);
-      }
-    };
     fetchUserBlogs();
   }, []);
 
