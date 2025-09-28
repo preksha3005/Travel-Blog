@@ -9,7 +9,6 @@ import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
-import { storage } from "./cloudinary.js";
 import User from "./models/User.js";
 import Model from "./models/Model.js";
 import { v2 as cloudinary } from "cloudinary";
