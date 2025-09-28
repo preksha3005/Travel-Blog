@@ -32,7 +32,13 @@ const Navbar_login = () => {
       <ul className="navbar">
         <li>Travel Blog</li>
       </ul>
+
       <ul className="flex relative -left-5 gap-20 text-xl">
+        <li>
+          <a className="hover:text-blue-800" href="/getall">
+            All Blogs
+          </a>
+        </li>
         <li>
           <div className="hover:text-blue-800">{initial}</div>
         </li>
