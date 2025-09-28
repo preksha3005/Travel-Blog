@@ -57,45 +57,42 @@ const Navbar_login = () => {
     //   </ul>
     // </nav>
 
-    <nav className="w-full h-14 flex flex-col md:flex-row justify-between items-center text-lg font-bold bg-blue-400/30 backdrop-blur-sm p-2 xs:text-base xs:h-14 md:text-2xl lg:text-2xl">
-  {/* Logo / Brand */}
-  <ul className="navbar flex justify-center md:justify-start w-full md:w-auto mb-2 md:mb-0">
-    <li>
-      <a className="hover:text-blue-800" href="/create">
-        Travel Blog
-      </a>
-    </li>
-  </ul>
+    <nav className="w-full h-14 flex justify-between items-center text-lg font-bold bg-blue-400/30 backdrop-blur-sm px-4 xs:px-2 xs:text-sm xs:h-12 md:text-2xl lg:text-2xl">
+      {/* Logo / Brand */}
+      <ul className="flex items-center">
+        <li>
+          <a
+            className="hover:text-blue-800 text-base xs:text-sm"
+            href="/create"
+          >
+            Travel Blog
+          </a>
+        </li>
+      </ul>
 
-  {/* Menu items */}
-  <ul className="flex flex-col md:flex-row gap-2 md:gap-20 items-center text-xl md:text-lg w-full md:w-auto">
-    <li>
-      <a className="hover:text-blue-800" href="/create">
-        Home
-      </a>
-    </li>
-    <li>
-      <a className="hover:text-blue-800" href="/getallsign">
-        All Blogs
-      </a>
-    </li>
-    <li>
-      <div className="hover:text-blue-800">{initial}</div>
-    </li>
-    <li>
-      <a
-        onClick={handlelog}
-        className="hover:text-blue-800 cursor-pointer"
-      >
-        Logout
-      </a>
-    </li>
-  </ul>
-</nav>
-
+      {/* Menu items */}
+      <ul className="flex items-center gap-8 xs:gap-4 text-lg xs:text-sm">
+        <li>
+          <a className="hover:text-blue-800" href="/create">
+            Home
+          </a>
+        </li>
+        <li>
+          <a className="hover:text-blue-800" href="/getallsign">
+            All Blogs
+          </a>
+        </li>
+        <li>
+          <div className="hover:text-blue-800">{initial}</div>
+        </li>
+        <li>
+          <a onClick={handlelog} className="hover:text-blue-800 cursor-pointer">
+            Logout
+          </a>
+        </li>
+      </ul>
+    </nav>
   );
 };
 
 export default Navbar_login;
-
-
