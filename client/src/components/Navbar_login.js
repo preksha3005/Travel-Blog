@@ -35,7 +35,7 @@ const Navbar_login = () => {
 
       <ul className="flex relative -left-5 gap-20 text-xl">
         <li>
-          <a className="hover:text-blue-800" href="/getall">
+          <a className="hover:text-blue-800" href="/getallsign">
             All Blogs
           </a>
         </li>

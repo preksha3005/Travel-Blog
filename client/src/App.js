@@ -7,6 +7,7 @@ import ForgotPass from "./components/ForgotPass";
 import ResetPass from "./components/ResetPass";
 import Home from "./components/Home";
 import AllBlogs from "./components/AllBlogs";
+import AllBlogsSignIn from "./components/AllBlogsSignIn";
 import Create from "./components/Create";
 // import Expense from './components/Expense';
 
@@ -22,6 +23,7 @@ function App() {
       <Route path="/resetpass/:token" element={<ResetPass />}></Route>
       <Route path="/getall" element={<AllBlogs/>}></Route>
       <Route path="/create" element={<Create/>}></Route>
+      <Route path="/getallsign" element={<AllBlogsSignIn/>}></Route>
     </Routes>
 </BrowserRouter>
     </div>
