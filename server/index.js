@@ -162,36 +162,65 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const storage = new CloudinaryStorage({
+// Multer + Cloudinary storage
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "travel-blog", // folder in Cloudinary
+    folder: "travel-blog",
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
 
 const upload = multer({ storage });
 
-app.post("/upload", verifyuser, upload.single("file"), async (req, res) => {
-  const userId = req.user.id;
-  try {
-    // Cloudinary returns URL in req.file.path
-    const imgUrl = req.file.path;
-
-    await Model.create({
-      img: imgUrl, // store the cloudinary URL
-      name: req.body.name,
-      content: req.body.content,
-      mail: req.body.mail,
-      user: userId,
+// Upload Blog Route (Fixed)
+app.post(
+  "/upload",
+  verifyuser,
+  (req, res, next) => {
+    upload.single("file")(req, res, function (err) {
+      if (err) {
+        console.error("Multer/Cloudinary error:", err);
+        return res
+          .status(400)
+          .json({ message: "Image upload failed", error: err.message });
+      }
+      next();
     });
+  },
+  async (req, res) => {
+    try {
+      if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
-    return res.json({ status: true, message: "Stored", imgUrl });
-  } catch (err) {
-    console.error(err);
-    return res.json({ message: "Error" });
+      const { name, content, mail } = req.body;
+
+      if (!name || !content || !mail) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      const imageUrl = req.file?.path || "";
+
+      const newBlog = await Model.create({
+        user: req.user.id,
+        name,
+        content,
+        mail,
+        img: imageUrl,
+      });
+
+      console.log("Blog saved successfully:", newBlog);
+      return res.status(201).json({ status: true, blog: newBlog });
+    } catch (err) {
+      console.error("Error in /upload:", err);
+      return res.status(500).json({
+        message: err.message || "Server error",
+        stack: err.stack,
+      });
+    }
   }
-});
+);
+
+
 app.get("/get", verifyuser, (req, res) => {
   const userId = req.user.id;
   Model.find({ user: userId })
